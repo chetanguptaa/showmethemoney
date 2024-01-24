@@ -17,4 +17,23 @@ model User {
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Account   Account?
+}
+
+model Account {
+  id                    String        @id @default(dbgenerated("concat('act_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  createdAt             DateTime      @default(now())
+  user                  User          @relation(fields: [userId], references: [id])
+  userId                String        @unique @db.Text
+  transactionsInitiated Transaction[] @relation("sender")
+  transactionsReceived  Transaction[] @relation("receiver")
+}
+
+model Transaction {
+  id         String   @id @default(dbgenerated("concat('trs_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  createdAt  DateTime @default(now())
+  sender     Account  @relation(fields: [senderId], references: [id], name: "sender")
+  senderId   String   @db.Text
+  receiver   Account  @relation(fields: [receiverId], references: [id], name: "receiver")
+  receiverId String   @db.Text
 }
