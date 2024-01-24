@@ -6,10 +6,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { User } from "lucide-react";
+import Logout from "./logout";
 
 export async function AvatarProfile() {
   const session = await getUserSession();
@@ -34,7 +34,7 @@ export async function AvatarProfile() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
+            <Logout />
             <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
