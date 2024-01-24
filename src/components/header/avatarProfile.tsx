@@ -35,7 +35,6 @@ export async function AvatarProfile() {
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <Logout />
-            <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
