@@ -1,6 +1,9 @@
-import { getUserSession } from "./lib/auth";
+import Header from "@/components/header";
 
 export default async function Home() {
-  const session = await getUserSession();
-  return <div>{JSON.stringify(session)}</div>;
+  return (
+    <div>
+      <Header />
+    </div>
+  );
 }
