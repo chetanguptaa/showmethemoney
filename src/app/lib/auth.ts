@@ -5,6 +5,11 @@ import prisma from "./prisma";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
 
+export const session = async ({ session, token }: any) => {
+  session.user.id = token.id;
+  return session;
+};
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -37,12 +42,22 @@ export const authOptions: NextAuthOptions = {
       });
       return true;
     },
+    session,
+    async jwt({ token, profile }) {
+      if (profile) {
+        const user = await prisma.user.findUnique({
+          where: {
+            email: profile.email,
+          },
+        });
+        if (!user) {
+          throw new Error("No user found");
+        }
+        token.id = user.id;
+      }
+      return token;
+    },
   },
-};
-
-export const session = async ({ session, token }: any) => {
-  session.user.id = token.id;
-  return session;
 };
 
 export const getUserSession = async (): Promise<User> => {
@@ -51,5 +66,6 @@ export const getUserSession = async (): Promise<User> => {
       session,
     },
   });
-  return authUserSession?.user;
+  if (!authUserSession) throw new Error("unauthorized");
+  return authUserSession.user;
 };
