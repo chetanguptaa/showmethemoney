@@ -29,6 +29,11 @@ export async function GET(request: Request) {
         },
       ],
     },
+    select: {
+      id: true,
+      email: true,
+      avatar: true,
+    },
   });
   return NextResponse.json(users);
 }
