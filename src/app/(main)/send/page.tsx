@@ -36,7 +36,7 @@ const Send = () => {
   }, 300);
 
   return (
-    <>
+    <div className="space-y-12">
       <div className="flex items-center space-x-8 pt-8 w-full sm:max-w-[600px] mx-auto">
         <Input
           placeholder="Enter user details"
@@ -52,7 +52,7 @@ const Send = () => {
         </button>
       </div>
       <UsersRenderer users={result} />
-    </>
+    </div>
   );
 };
 

@@ -33,6 +33,7 @@ export async function GET(request: Request) {
       id: true,
       email: true,
       avatar: true,
+      name: true,
     },
   });
   return NextResponse.json(users);

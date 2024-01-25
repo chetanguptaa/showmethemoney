@@ -1,8 +1,10 @@
 import React from "react";
+import UserRenderer from "./userRenderer";
 
 export type TUserType = {
   id: string;
   email: string;
+  name?: string;
   avatar?: string;
 };
 
@@ -12,11 +14,16 @@ type Props = {
 
 const UsersRenderer = ({ users }: Props) => {
   return (
-    <ul>
+    <div className="space-y-8">
       {users.map((user) => (
-        <li key={user.id}>{user.email}</li>
+        <UserRenderer
+          key={user.id}
+          email={user.email}
+          avatar={user.avatar}
+          name={user.name}
+        />
       ))}
-    </ul>
+    </div>
   );
 };
 
