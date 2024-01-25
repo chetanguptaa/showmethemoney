@@ -51,7 +51,7 @@ const CreateAccount = () => {
   };
 
   return (
-    <div className="flex items-center container min-h-[80vh]">
+    <div className="flex items-center min-h-[80vh]">
       <Card className="w-[350px] mx-auto">
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
