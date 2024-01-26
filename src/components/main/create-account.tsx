@@ -18,7 +18,7 @@ import { ZodError } from "zod";
 
 const CreateAccount = () => {
   const router = useRouter();
-  const { control, register, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm();
 
   const { toast } = useToast();
 
@@ -68,14 +68,12 @@ const CreateAccount = () => {
                 render={({ field }) => (
                   <Input
                     {...field}
+                    value={field.value ?? ""}
                     id="amount"
                     placeholder="Enter initial amount💲"
-                    {...(register("amount"),
-                    {
-                      min: 100,
-                      max: 10000,
-                      required: true,
-                    })}
+                    min={100}
+                    max={10000}
+                    required
                     type="number"
                   />
                 )}

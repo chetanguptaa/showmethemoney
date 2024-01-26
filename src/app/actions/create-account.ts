@@ -3,9 +3,7 @@
 import z from "zod";
 import prisma from "../lib/prisma";
 import { getUserSession } from "../lib/auth";
-
-type TStatusSuccess = "success";
-type TStatusFailure = "failure";
+import { TStatusFailure, TStatusSuccess } from "../api/users/send/route";
 
 const amountSchema = z.number().min(100).max(10000);
 
