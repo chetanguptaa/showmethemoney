@@ -36,5 +36,10 @@ export async function GET(request: Request) {
       name: true,
     },
   });
+  // if (users.length === 0) {
+  //   return NextResponse.json({
+  //     message: "No user found",
+  //   });
+  // }
   return NextResponse.json(users);
 }
