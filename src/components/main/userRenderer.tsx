@@ -24,9 +24,10 @@ type Props = {
   name?: string;
   email: string;
   avatar?: string;
+  URLType: "request" | "send";
 };
 
-const UserRenderer = ({ email, avatar, name, id }: Props) => {
+const UserRenderer = ({ email, avatar, name, id, URLType }: Props) => {
   const { control, handleSubmit } = useForm();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ const UserRenderer = ({ email, avatar, name, id }: Props) => {
     try {
       setLoading(true);
       data.id = id;
-      const response = await axios.post("/api/users/send", data);
+      const response = await axios.post(`/api/users/${URLType}`, data);
       toast({
         variant: "default",
         title: "Success",

@@ -10,9 +10,10 @@ export type TUserType = {
 
 type Props = {
   users: TUserType[] | [];
+  URLType: "request" | "send";
 };
 
-const UsersRenderer = ({ users }: Props) => {
+const UsersRenderer = ({ users, URLType }: Props) => {
   return (
     <div className="space-y-8">
       {users.map((user) => (
@@ -22,6 +23,7 @@ const UsersRenderer = ({ users }: Props) => {
           email={user.email}
           avatar={user.avatar}
           name={user.name}
+          URLType={URLType}
         />
       ))}
     </div>
