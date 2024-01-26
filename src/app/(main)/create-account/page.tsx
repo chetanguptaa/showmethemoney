@@ -1,7 +1,7 @@
 import CreateAccount from "@/components/main/create-account";
 import React from "react";
-import { getUserSession } from "../../lib/auth";
-import prisma from "../../lib/prisma";
+import { getUserSession } from "@/app/lib/auth";
+import prisma from "@/app/lib/prisma";
 
 const CreateAccountPage = async () => {
   const session = await getUserSession();
