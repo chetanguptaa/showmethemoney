@@ -32,9 +32,11 @@ model Account {
 
 model Transaction {
   id         String   @id @default(dbgenerated("concat('trs_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  amount     Int
   createdAt  DateTime @default(now())
-  sender     Account  @relation(fields: [senderId], references: [id], name: "sender")
-  senderId   String   @db.Text
-  receiver   Account  @relation(fields: [receiverId], references: [id], name: "receiver")
-  receiverId String   @db.Text
+  sender     Account? @relation(fields: [senderId], references: [id], name: "sender")
+  senderId   String?  @db.Text
+  receiver   Account? @relation(fields: [receiverId], references: [id], name: "receiver")
+  receiverId String?  @db.Text
+  message    String
 }
