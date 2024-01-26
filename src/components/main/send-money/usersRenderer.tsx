@@ -18,6 +18,7 @@ const UsersRenderer = ({ users }: Props) => {
       {users.map((user) => (
         <UserRenderer
           key={user.id}
+          id={user.id}
           email={user.email}
           avatar={user.avatar}
           name={user.name}
