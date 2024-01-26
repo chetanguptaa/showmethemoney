@@ -19,7 +19,6 @@ import { ZodError } from "zod";
 const CreateAccount = () => {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-
   const { toast } = useToast();
 
   const onFormSubmit = async (data: any) => {
