@@ -78,11 +78,19 @@ const CreateAccount = () => {
                 )}
               />
             </div>
-            <div className="flex justify-between pt-8">
-              <Button variant="outline">Cancel</Button>
-              <Button type="submit">Create</Button>
+            <div className="pt-8 pb-2">
+              <Button type="submit" className="w-full">
+                Create
+              </Button>
             </div>
           </form>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/")}
+            className="w-full"
+          >
+            Cancel
+          </Button>
         </CardContent>
       </Card>
     </div>
