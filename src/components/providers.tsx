@@ -2,6 +2,7 @@ import React from "react";
 import { ThemeProvider } from "./providers/theme-provider";
 import { NextAuthProvider } from "./providers/session-provider";
 import { Toaster } from "@/components/ui/toaster";
+import ToolTipProvider from "./providers/tooltip-provider";
 
 type Props = {
   children?: React.ReactNode;
@@ -17,7 +18,7 @@ const Providers = ({ children }: Props) => {
     >
       <NextAuthProvider>
         <Toaster />
-        {children}
+        <ToolTipProvider>{children}</ToolTipProvider>
       </NextAuthProvider>
     </ThemeProvider>
   );

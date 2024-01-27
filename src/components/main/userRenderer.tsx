@@ -18,6 +18,7 @@ import UserProfile from "./userProfile";
 import { Controller, useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type Props = {
   id: string;
@@ -31,6 +32,7 @@ const UserRenderer = ({ email, avatar, name, id, URLType }: Props) => {
   const { control, handleSubmit } = useForm();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const onFormSubmit = async (data: any) => {
     try {
@@ -50,6 +52,7 @@ const UserRenderer = ({ email, avatar, name, id, URLType }: Props) => {
       });
     } finally {
       setLoading(false);
+      router.refresh();
     }
   };
 
@@ -109,8 +112,10 @@ const UserRenderer = ({ email, avatar, name, id, URLType }: Props) => {
                       id="message"
                       className="col-span-3"
                       type="text"
-                      minLength={1}
                       maxLength={100}
+                      minLength={1}
+                      min={1}
+                      max={100}
                       required
                     />
                   )}
