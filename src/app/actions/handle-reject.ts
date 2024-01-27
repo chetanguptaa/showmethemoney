@@ -39,6 +39,7 @@ export async function handleReject(
       },
       data: {
         isRejected: true,
+        isSeen: true,
       },
     });
     return {

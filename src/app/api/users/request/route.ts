@@ -171,7 +171,7 @@ function requestTransfer(
       });
       await tx.account.update({
         data: {
-          requestsReceived: {
+          notificationsReceived: {
             connectOrCreate: {
               where: {
                 id: notification.id,

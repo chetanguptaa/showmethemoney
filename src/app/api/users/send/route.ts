@@ -199,7 +199,7 @@ function transfer(
               },
             },
           },
-          requestsReceived: {
+          notificationsReceived: {
             connectOrCreate: {
               where: {
                 id: notification.id,

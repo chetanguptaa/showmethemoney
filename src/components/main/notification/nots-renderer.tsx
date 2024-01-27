@@ -14,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import AcceptOrReject from "./acc-or-rej";
+import Seen from "./seen";
 
 const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
   const notifications = await prisma.notification.findMany({
@@ -21,6 +22,7 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
       isFullfilled: false,
       receiverId: accountId,
       isRejected: false,
+      isSeen: false,
     },
     select: {
       id: true,
@@ -76,10 +78,12 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
                       avatar={notification.sender?.user.avatar || ""}
                     />
                   </div>
-                  {notification.type === "REQUEST" && (
+                  {notification.type === "REQUEST" ? (
                     <div className="flex items-center gap-12">
                       <AcceptOrReject id={notification.id} />
                     </div>
+                  ) : (
+                    <Seen id={notification.id} />
                   )}
                 </div>
                 <div className="mt-8 space-x-7">
@@ -103,7 +107,8 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
                         : "text-black"
                     }
                   >
-                    $ {notification.amount}
+                    $ {notification.type === "SENT" && "+ "}
+                    {notification.amount}
                   </Badge>
                 </div>
                 <Separator className="my-4" />

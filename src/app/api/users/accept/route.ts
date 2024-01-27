@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function transfer(notificationId: string):
+function transfer(requestId: string):
   | Promise<
       | {
           message: TStatusFailure;
@@ -93,48 +93,55 @@ function transfer(notificationId: string):
     return prisma.$transaction(async (tx) => {
       const request = await tx.notification.findFirst({
         where: {
-          id: notificationId,
+          id: requestId,
         },
       });
-
       if (request === null) {
         return {
           message: "failure",
           error: "request",
         };
       }
-      const sender = await tx.account.findFirst({
+      const requestReceiver = await tx.account.findFirst({
         where: {
           id: request.receiverId || "",
         },
       });
 
-      if (sender === null) {
+      if (requestReceiver === null) {
         return {
           message: "failure",
           error: "receiverAccount",
         };
       }
-      const receiver = await tx.account.findFirst({
+      const requestSender = await tx.account.findFirst({
         where: {
           id: request.senderId || "",
         },
       });
 
-      if (receiver === null) {
+      if (requestSender === null) {
         return {
           message: "failure",
           error: "receiverAccount",
         };
       }
 
-      if (sender.balance < request.amount) {
+      if (requestReceiver.balance < request.amount) {
         return {
           message: "failure",
           error: "balance",
         };
       }
+
       const transaction = await tx.transaction.create({
+        data: {
+          amount: request.amount,
+          message: request.message,
+        },
+      });
+
+      const notification = await tx.transaction.create({
         data: {
           amount: request.amount,
           message: request.message,
@@ -155,6 +162,19 @@ function transfer(notificationId: string):
                 receiverId: request.receiverId,
                 amount: request.amount,
                 message: request.message,
+              },
+            },
+          },
+          notificationsReceived: {
+            connectOrCreate: {
+              where: {
+                id: notification.id,
+              },
+              create: {
+                senderId: requestSender.id,
+                amount: request.amount,
+                message: request.message,
+                type: "SENT",
               },
             },
           },
@@ -181,6 +201,18 @@ function transfer(notificationId: string):
               },
             },
           },
+          requestsCreated: {
+            connectOrCreate: {
+              where: {
+                id: notification.id,
+              },
+              create: {
+                type: "SENT",
+                amount: request.amount,
+                message: request.message,
+              },
+            },
+          },
         },
         where: {
           id: request.receiverId || "",
@@ -189,10 +221,11 @@ function transfer(notificationId: string):
 
       await prisma.notification.update({
         where: {
-          id: notificationId,
+          id: requestId,
         },
         data: {
           isFullfilled: true,
+          isSeen: true,
         },
       });
       return {
