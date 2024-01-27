@@ -79,7 +79,7 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
                 <div className="mt-8 space-x-7">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Badge>Message</Badge>
+                      <Badge className="hover:cursor-pointer">Message</Badge>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-2xl h-fit">
                       <DialogHeader>
