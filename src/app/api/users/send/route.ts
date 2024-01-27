@@ -139,6 +139,13 @@ function transfer(
           message: message,
         },
       });
+      const notification = await prisma.notification.create({
+        data: {
+          type: "SENT",
+          amount,
+          message,
+        },
+      });
 
       await tx.account.update({
         data: {
@@ -154,6 +161,19 @@ function transfer(
                 receiverId,
                 amount,
                 message,
+              },
+            },
+          },
+          requestsCreated: {
+            connectOrCreate: {
+              where: {
+                id: notification.id,
+              },
+              create: {
+                receiverId,
+                amount,
+                message,
+                type: "REQUEST",
               },
             },
           },
@@ -179,11 +199,25 @@ function transfer(
               },
             },
           },
+          requestsReceived: {
+            connectOrCreate: {
+              where: {
+                id: notification.id,
+              },
+              create: {
+                senderId,
+                amount,
+                message,
+                type: "REQUEST",
+              },
+            },
+          },
         },
         where: {
           userId: receiverId,
         },
       });
+
       return {
         message: "success",
       };

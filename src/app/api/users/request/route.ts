@@ -142,10 +142,11 @@ function requestTransfer(
           error: "receiver",
         };
       }
-      const request = await tx.request.create({
+      const notification = await tx.notification.create({
         data: {
           amount: amount,
           message: message,
+          type: "REQUEST",
         },
       });
       await tx.account.update({
@@ -153,12 +154,13 @@ function requestTransfer(
           requestsCreated: {
             connectOrCreate: {
               where: {
-                id: request.id,
+                id: notification.id,
               },
               create: {
                 receiverId,
                 amount,
                 message,
+                type: "REQUEST",
               },
             },
           },
@@ -172,12 +174,13 @@ function requestTransfer(
           requestsReceived: {
             connectOrCreate: {
               where: {
-                id: request.id,
+                id: notification.id,
               },
               create: {
                 senderId,
                 amount,
                 message,
+                type: "REQUEST",
               },
             },
           },

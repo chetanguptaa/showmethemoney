@@ -16,16 +16,17 @@ import { Badge } from "@/components/ui/badge";
 import AcceptOrReject from "./acc-or-rej";
 
 const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
-  const requests = await prisma.request.findMany({
+  const notifications = await prisma.notification.findMany({
     where: {
-      receiverId: accountId,
       isFullfilled: false,
+      receiverId: accountId,
       isRejected: false,
     },
     select: {
       id: true,
       amount: true,
       message: true,
+      type: true,
       sender: {
         select: {
           user: {
@@ -38,8 +39,11 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
         },
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
-  return requests.length === 0 ? (
+  return notifications.length === 0 ? (
     <Dialog>
       <DialogTrigger asChild>
         <Bell className="hover:cursor-pointer" />
@@ -62,19 +66,21 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
             <h4 className="mb-8 text-sm font-medium leading-none">
               Notifications
             </h4>
-            {requests.map((request) => (
-              <div key={request.id} className="text-sm">
+            {notifications.map((notification) => (
+              <div key={notification.id} className="text-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <UserProfile
-                      name={request.sender?.user.name || ""}
-                      email={request.sender?.user.email || ""}
-                      avatar={request.sender?.user.avatar || ""}
+                      name={notification.sender?.user.name || ""}
+                      email={notification.sender?.user.email || ""}
+                      avatar={notification.sender?.user.avatar || ""}
                     />
                   </div>
-                  <div className="flex items-center gap-12">
-                    <AcceptOrReject id={request.id} />
-                  </div>
+                  {notification.type === "REQUEST" && (
+                    <div className="flex items-center gap-12">
+                      <AcceptOrReject id={notification.id} />
+                    </div>
+                  )}
                 </div>
                 <div className="mt-8 space-x-7">
                   <Dialog>
@@ -85,12 +91,20 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
                       <DialogHeader>
                         <DialogTitle>Message</DialogTitle>
                         <DialogDescription className="break-all">
-                          {request.message}
+                          {notification.message}
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>
                   </Dialog>
-                  <Badge>$ {request.amount}</Badge>
+                  <Badge
+                    className={
+                      notification.type === "SENT"
+                        ? "text-blue-400"
+                        : "text-black"
+                    }
+                  >
+                    $ {notification.amount}
+                  </Badge>
                 </div>
                 <Separator className="my-4" />
               </div>

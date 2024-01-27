@@ -14,7 +14,7 @@ const bodySchema = z
   .object({
     id: z.string({
       required_error: "should be a string",
-    }), //// This ID is of request
+    }), //// This ID is of notification
   })
   .strict();
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function transfer(requestId: string):
+function transfer(notificationId: string):
   | Promise<
       | {
           message: TStatusFailure;
@@ -91,9 +91,9 @@ function transfer(requestId: string):
   | { message: TStatusFailure; error: TErrorServer } {
   try {
     return prisma.$transaction(async (tx) => {
-      const request = await tx.request.findFirst({
+      const request = await tx.notification.findFirst({
         where: {
-          id: requestId,
+          id: notificationId,
         },
       });
 
@@ -187,9 +187,9 @@ function transfer(requestId: string):
         },
       });
 
-      await prisma.request.update({
+      await prisma.notification.update({
         where: {
-          id: requestId,
+          id: notificationId,
         },
         data: {
           isFullfilled: true,

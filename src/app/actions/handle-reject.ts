@@ -10,9 +10,10 @@ export async function handleReject(
   | { status: TStatusFailure; error: string }
 > {
   try {
-    const request = await prisma.request.findFirst({
+    const request = await prisma.notification.findFirst({
       where: {
         id,
+        type: "REQUEST",
       },
       select: {
         isRejected: true,
@@ -32,7 +33,7 @@ export async function handleReject(
       };
     }
 
-    await prisma.request.update({
+    await prisma.notification.update({
       where: {
         id,
       },

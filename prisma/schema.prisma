@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum NotificationType {
+  REQUEST
+  SENT
+}
+
 model User {
   id        String   @id @default(dbgenerated("concat('usr_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
   email     String   @unique
@@ -21,15 +26,15 @@ model User {
 }
 
 model Account {
-  id                    String        @id @default(dbgenerated("concat('act_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
-  createdAt             DateTime      @default(now())
-  user                  User          @relation(fields: [userId], references: [id])
-  userId                String        @unique @db.Text
+  id                    String         @id @default(dbgenerated("concat('act_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  createdAt             DateTime       @default(now())
+  user                  User           @relation(fields: [userId], references: [id])
+  userId                String         @unique @db.Text
   balance               Int
-  transactionsInitiated Transaction[] @relation("sender")
-  transactionsReceived  Transaction[] @relation("receiver")
-  requestsCreated       Request[]     @relation("sender")
-  requestsReceived      Request[]     @relation("receiver")
+  transactionsInitiated Transaction[]  @relation("sender")
+  transactionsReceived  Transaction[]  @relation("receiver")
+  requestsCreated       Notification[] @relation("sender")
+  requestsReceived      Notification[] @relation("receiver")
 }
 
 model Transaction {
@@ -43,21 +48,16 @@ model Transaction {
   message    String
 }
 
-model Request {
-  id           String   @id @default(dbgenerated("concat('req_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
-  createdAt    DateTime @default(now())
-  isFullfilled Boolean  @default(false)
-  isRejected   Boolean  @default(false)
+model Notification {
+  id           String           @id @default(dbgenerated("concat('not_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  type         NotificationType
+  createdAt    DateTime         @default(now())
+  isFullfilled Boolean          @default(false)
+  isRejected   Boolean          @default(false)
   amount       Int
-  receiver     Account? @relation(fields: [receiverId], references: [id], name: "receiver")
-  receiverId   String?  @db.Text
-  sender       Account? @relation(fields: [senderId], references: [id], name: "sender")
-  senderId     String?  @db.Text
+  receiver     Account?         @relation(fields: [receiverId], references: [id], name: "receiver")
+  receiverId   String?          @db.Text
+  sender       Account?         @relation(fields: [senderId], references: [id], name: "sender")
+  senderId     String?          @db.Text
   message      String
 }
-
-// Here every user can create a request asking other person to send them 
-// money with a message, the person receiving the request can however
-// fullfill that request or reject that request. 
-// if he fullfill that request the amount that is requested will get debited
-// from their account.
