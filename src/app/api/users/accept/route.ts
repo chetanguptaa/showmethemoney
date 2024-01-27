@@ -1,48 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
-import { getUserSession } from "@/app/lib/auth";
 import z from "zod";
 
 export type TStatusFailure = "failure";
 export type TStatusSuccess = "success";
-export type TErrorAccount = "account";
+export type TErrorSenderAccount = "senderAccount";
+export type TErrorReceiverAccount = "receiverAccount";
 export type TErrorBalance = "balance";
 export type TErrorServer = "server";
-export type TErrorReceiverAccount = "receiver";
-export type TErrorSenderAccount = "sender";
+export type TErrorRequest = "request";
 
 const bodySchema = z
   .object({
-    amount: z
-      .number({
-        required_error: "should be a number",
-      })
-      .min(1, {
-        message: "can't be less than 1",
-      })
-      .max(10000, {
-        message: "can't be more than 10000",
-      }),
-    message: z
-      .string({
-        required_error: "should be a string",
-      })
-      .min(1, {
-        message: "should be atleast one character long",
-      })
-      .max(100, {
-        message: "should be atmost 100 characters long",
-      }),
     id: z.string({
       required_error: "should be a string",
-    }),
+    }), //// This ID is of request
   })
   .strict();
 
 export async function POST(request: NextRequest) {
-  const { id } = await getUserSession();
   const body = await request.json();
-  body.amount = parseFloat(body.amount);
   const isValid = bodySchema.safeParse(body);
   if (!isValid.success) {
     return NextResponse.json(
@@ -55,18 +32,7 @@ export async function POST(request: NextRequest) {
       }
     );
   }
-
-  if (id === body.id) {
-    return NextResponse.json(
-      {
-        message: "Can't send money to yourself",
-      },
-      {
-        status: 418,
-      }
-    );
-  }
-  const res = await transfer(id, body.id, body.amount, body.message);
+  const res = await transfer(body.id);
   if (res.message === "success") {
     return NextResponse.json(
       {
@@ -78,12 +44,22 @@ export async function POST(request: NextRequest) {
     );
   }
   if (res.message === "failure") {
-    if (res.error === "account") {
+    if (res.error === "senderAccount") {
       return NextResponse.json(
         {
-          message: "Invalid Account",
+          message: "Please first create an account",
         },
         { status: 401 }
+      );
+    }
+    if (res.error === "receiverAccount") {
+      return NextResponse.json(
+        {
+          message: "No account found",
+        },
+        {
+          status: 401,
+        }
       );
     }
     if (res.error === "balance") {
@@ -100,34 +76,59 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function transfer(
-  senderId: string,
-  receiverId: string,
-  amount: number,
-  message: string
-):
+function transfer(requestId: string):
   | Promise<
       | {
           message: TStatusFailure;
-          error: TErrorAccount | TErrorBalance;
+          error:
+            | TErrorSenderAccount
+            | TErrorReceiverAccount
+            | TErrorBalance
+            | TErrorRequest;
         }
       | { message: TStatusSuccess }
     >
   | { message: TStatusFailure; error: TErrorServer } {
   try {
     return prisma.$transaction(async (tx) => {
-      const sender = await tx.account.findFirst({
+      const request = await tx.request.findFirst({
         where: {
-          userId: senderId,
+          id: requestId,
         },
       });
+
+      if (request === null) {
+        return {
+          message: "failure",
+          error: "request",
+        };
+      }
+      const sender = await tx.account.findFirst({
+        where: {
+          id: request.receiverId || "",
+        },
+      });
+
       if (sender === null) {
         return {
           message: "failure",
-          error: "account",
+          error: "receiverAccount",
         };
       }
-      if (sender.balance < amount) {
+      const receiver = await tx.account.findFirst({
+        where: {
+          id: request.senderId || "",
+        },
+      });
+
+      if (receiver === null) {
+        return {
+          message: "failure",
+          error: "receiverAccount",
+        };
+      }
+
+      if (sender.balance < request.amount) {
         return {
           message: "failure",
           error: "balance",
@@ -135,15 +136,15 @@ function transfer(
       }
       const transaction = await tx.transaction.create({
         data: {
-          amount: amount,
-          message: message,
+          amount: request.amount,
+          message: request.message,
         },
       });
 
       await tx.account.update({
         data: {
           balance: {
-            decrement: amount,
+            increment: request.amount,
           },
           transactionsInitiated: {
             connectOrCreate: {
@@ -151,21 +152,22 @@ function transfer(
                 id: transaction.id,
               },
               create: {
-                receiverId,
-                amount,
-                message,
+                receiverId: request.receiverId,
+                amount: request.amount,
+                message: request.message,
               },
             },
           },
         },
         where: {
-          userId: senderId,
+          id: request.senderId || "",
         },
       });
+
       await tx.account.update({
         data: {
           balance: {
-            increment: amount,
+            decrement: request.amount,
           },
           transactionsReceived: {
             connectOrCreate: {
@@ -173,15 +175,24 @@ function transfer(
                 id: transaction.id,
               },
               create: {
-                senderId,
-                amount,
-                message,
+                senderId: request.senderId,
+                amount: request.amount,
+                message: request.message,
               },
             },
           },
         },
         where: {
-          userId: receiverId,
+          id: request.receiverId || "",
+        },
+      });
+
+      await prisma.request.update({
+        where: {
+          id: requestId,
+        },
+        data: {
+          isFullfilled: true,
         },
       });
       return {
