@@ -34,7 +34,7 @@ model Account {
   transactionsInitiated Transaction[]  @relation("sender")
   transactionsReceived  Transaction[]  @relation("receiver")
   requestsCreated       Notification[] @relation("sender")
-  requestsReceived      Notification[] @relation("receiver")
+  notificationsReceived Notification[] @relation("receiver")
 }
 
 model Transaction {
@@ -54,6 +54,7 @@ model Notification {
   createdAt    DateTime         @default(now())
   isFullfilled Boolean          @default(false)
   isRejected   Boolean          @default(false)
+  isSeen       Boolean          @default(false)
   amount       Int
   receiver     Account?         @relation(fields: [receiverId], references: [id], name: "receiver")
   receiverId   String?          @db.Text
