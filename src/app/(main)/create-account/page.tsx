@@ -2,6 +2,7 @@ import CreateAccount from "@/components/main/create-account";
 import React from "react";
 import { getUserSession } from "@/app/lib/auth";
 import prisma from "@/app/lib/prisma";
+import HaveAccount from "@/components/have-account";
 
 const CreateAccountPage = async () => {
   const session = await getUserSession();
@@ -11,9 +12,7 @@ const CreateAccountPage = async () => {
       userId,
     },
   });
-  return (
-    <>{account ? <p>You already have an account</p> : <CreateAccount />}</>
-  );
+  return <>{account ? <HaveAccount /> : <CreateAccount />}</>;
 };
 
 export default CreateAccountPage;
