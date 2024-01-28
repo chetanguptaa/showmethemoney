@@ -79,37 +79,47 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
                     />
                   </div>
                   {notification.type === "REQUEST" ? (
-                    <div className="flex items-center gap-12">
+                    <div className="hidden sm:flex items-center gap-12">
                       <AcceptOrReject id={notification.id} />
                     </div>
                   ) : (
-                    <Seen id={notification.id} />
+                    <Seen id={notification.id} Pclass="hidden sm:flex" />
                   )}
                 </div>
-                <div className="mt-8 space-x-7">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Badge className="hover:cursor-pointer">Message</Badge>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-2xl h-fit">
-                      <DialogHeader>
-                        <DialogTitle>Message</DialogTitle>
-                        <DialogDescription className="break-all">
-                          {notification.message}
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                  <Badge
-                    className={
-                      notification.type === "SENT"
-                        ? "text-blue-400"
-                        : "text-black"
-                    }
-                  >
-                    $ {notification.type === "SENT" && "+ "}
-                    {notification.amount}
-                  </Badge>
+                <div className="mt-8 space-x-7 flex justify-between">
+                  <div className="space-x-4">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Badge className="hover:cursor-pointer">Message</Badge>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-2xl h-fit">
+                        <DialogHeader>
+                          <DialogTitle>Message</DialogTitle>
+                          <DialogDescription className="break-all">
+                            {notification.message}
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                    <Badge
+                      className={
+                        notification.type === "SENT"
+                          ? "text-blue-400"
+                          : "text-black"
+                      }
+                    >
+                      $ {notification.type === "SENT" && "+ "}
+                      {notification.amount}
+                    </Badge>
+                  </div>
+
+                  {notification.type === "REQUEST" ? (
+                    <div className="flex sm:hidden items-center gap-8">
+                      <AcceptOrReject id={notification.id} />
+                    </div>
+                  ) : (
+                    <Seen id={notification.id} Pclass="block sm:hidden" />
+                  )}
                 </div>
                 <Separator className="my-4" />
               </div>
