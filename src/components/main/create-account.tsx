@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,10 +18,12 @@ import { ZodError } from "zod";
 
 const CreateAccount = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm();
   const { toast } = useToast();
 
   const onFormSubmit = async (data: any) => {
+    setLoading(true);
     const response = await handleFormSubmit(data);
     if (response.status === "success") {
       toast({
@@ -47,6 +49,7 @@ const CreateAccount = () => {
         });
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -79,7 +82,7 @@ const CreateAccount = () => {
               />
             </div>
             <div className="pt-8 pb-2">
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={loading}>
                 Create
               </Button>
             </div>
