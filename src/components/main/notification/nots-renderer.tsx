@@ -62,7 +62,7 @@ const NotificationsRenderer = async ({ accountId }: { accountId: string }) => {
       <DialogTrigger asChild>
         <BellDot className="hover:cursor-pointer" />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl h-3/5">
+      <DialogContent className="sm:max-w-2xl h-2/5">
         <ScrollArea className="h-full w-full">
           <div className="p-4">
             <h4 className="mb-8 text-sm font-medium leading-none">
