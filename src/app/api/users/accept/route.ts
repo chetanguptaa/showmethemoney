@@ -153,13 +153,13 @@ function transfer(requestId: string):
           balance: {
             increment: request.amount,
           },
-          transactionsInitiated: {
+          transactionsReceived: {
             connectOrCreate: {
               where: {
                 id: transaction.id,
               },
               create: {
-                receiverId: request.receiverId,
+                senderId: request.receiverId,
                 amount: request.amount,
                 message: request.message,
               },
@@ -189,13 +189,13 @@ function transfer(requestId: string):
           balance: {
             decrement: request.amount,
           },
-          transactionsReceived: {
+          transactionsInitiated: {
             connectOrCreate: {
               where: {
                 id: transaction.id,
               },
               create: {
-                senderId: request.senderId,
+                receiverId: request.senderId,
                 amount: request.amount,
                 message: request.message,
               },
