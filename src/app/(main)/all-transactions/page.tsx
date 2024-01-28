@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import NoAccount from "@/components/no-account";
 
 type Props = {};
 
@@ -23,7 +24,7 @@ const AllTransactionsPage = async (props: Props) => {
     },
   });
   if (!account) {
-    return <div>You do not have an account</div>;
+    return <NoAccount />;
   }
   const transactions = await prisma.account.findFirst({
     where: {
