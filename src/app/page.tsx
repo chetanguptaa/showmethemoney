@@ -4,7 +4,7 @@ import LandingComponent from "@/components/landing/landingComponents";
 const components = [
   {
     text: "Create Account",
-    description: "You can create a new account",
+    description: "Create a account to get started",
     url: "/create-account",
   },
   {

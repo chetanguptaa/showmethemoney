@@ -9,13 +9,13 @@ const Header = async () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 sm:max-w-screen-xl items-center max-w-screen-sm">
-        <a className="hidden sm:block items-center space-x-2" href="/">
+        <a className=" items-center space-x-2" href="/">
           <Logo />
         </a>
         <div className="flex flex-1 items-center justify-end">
           <nav className="flex items-center space-x-6">
-            <AvatarProfile />
             <Notifications />
+            <AvatarProfile />
             <a
               target="_blank"
               rel="noreferrer"
