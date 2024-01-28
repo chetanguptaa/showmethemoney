@@ -22,15 +22,15 @@ const CheckBalance = () => {
     }
   };
   return (
-    <Alert className=" border-none">
+    <Alert
+      className="border-none hover:cursor-pointer hover:scale-110 transition-transform"
+      onClick={checkAccountBalance}
+    >
       <Terminal className="h-4 w-4" />
       <AlertTitle>Check Balance</AlertTitle>
       <AlertDescription className="flex justify-between">
         <p>You can check balance in your account</p>
-        <MoveRight
-          className="hover:cursor-pointer hover:scale-110 transition-transform"
-          onClick={checkAccountBalance}
-        />
+        <MoveRight className="hover:cursor-pointer hover:scale-110 transition-transform" />
       </AlertDescription>
     </Alert>
   );
