@@ -1,6 +1,5 @@
 import CheckBalance from "@/components/landing/check-balance";
 import LandingComponent from "@/components/landing/landingComponents";
-import RecentTransactions from "@/components/landing/recentTrs";
 
 const components = [
   {
@@ -39,7 +38,6 @@ export default async function Home() {
         ))}
         <CheckBalance />
       </div>
-      <RecentTransactions />
     </div>
   );
 }
