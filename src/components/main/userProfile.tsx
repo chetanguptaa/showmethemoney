@@ -20,8 +20,10 @@ const UserProfile = memo(function UserProfile({ avatar, email, name }: Props) {
   const NameAndEmailElements = useMemo(
     () => (
       <div className="ml-4 space-y-1">
-        {name && <p className="text-sm font-medium leading-none">{name}</p>}
-        <p className="text-sm text-muted-foreground">{email}</p>
+        {name && (
+          <p className="text-sm font-medium leading-none break-all">{name}</p>
+        )}
+        <p className="text-sm text-muted-foreground break-all">{email}</p>
       </div>
     ),
     [name, email]
