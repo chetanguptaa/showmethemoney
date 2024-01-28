@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
-import { useRouter } from "next/navigation";
 import { MoveRight, Terminal } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import Link from "next/link";
 
 type Props = {
   text: string;
@@ -12,21 +10,17 @@ type Props = {
 };
 
 const LandingComponent = ({ text, description, url }: Props) => {
-  const router = useRouter();
   return (
-    <>
-      <Alert className=" border-none">
+    <Link href={url}>
+      <Alert className="border-none hover:cursor-pointer hover:scale-110 transition-transform">
         <Terminal className="h-4 w-4" />
         <AlertTitle>{text}</AlertTitle>
         <AlertDescription className="flex justify-between">
           <p>{description}</p>
-          <MoveRight
-            className="hover:cursor-pointer hover:scale-110 transition-transform"
-            onClick={() => router.push(url)}
-          />
+          <MoveRight className="hover:cursor-pointer hover:scale-110 transition-transform" />
         </AlertDescription>
       </Alert>
-    </>
+    </Link>
   );
 };
 
