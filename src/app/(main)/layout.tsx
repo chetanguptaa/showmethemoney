@@ -11,7 +11,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="container sm:max-w-screen-xl max-w-screen-sm">
+    <div className="sm:container sm:max-w-screen-xl max-w-screen-sm">
       {children}
     </div>
   );
