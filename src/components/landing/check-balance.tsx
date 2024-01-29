@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { MoveRight, Terminal } from "lucide-react";
 import { checkAccountBalanceAction } from "@/app/actions/check-account-balance";
 import { toast } from "../ui/use-toast";
+import {
+  GlowingStarsBackgroundCard,
+  GlowingStarsTitle,
+} from "../ui/glowing-stars";
+import { rs } from "./glowing-card";
 
 const CheckBalance = () => {
   const checkAccountBalance = async () => {
@@ -22,17 +25,18 @@ const CheckBalance = () => {
     }
   };
   return (
-    <Alert
-      className="border-none hover:cursor-pointer hover:scale-110 transition-transform"
-      onClick={checkAccountBalance}
-    >
-      <Terminal className="h-4 w-4" />
-      <AlertTitle>Check Balance</AlertTitle>
-      <AlertDescription className="flex justify-between">
-        <p>You can check balance in your account</p>
-        <MoveRight className="hover:cursor-pointer hover:scale-110 transition-transform" />
-      </AlertDescription>
-    </Alert>
+    <div className={rs.className}>
+      <div className="flex flex-row sm:flex-col py-4 items-center justify-center antialiased">
+        <GlowingStarsBackgroundCard>
+          <GlowingStarsTitle
+            className="text-center underline underline-offset-4 group-hover:underline-offset-8 transition-all duration-300 ease-in-out hover:cursor-pointer"
+            checkBalance={checkAccountBalance}
+          >
+            Check Balance
+          </GlowingStarsTitle>
+        </GlowingStarsBackgroundCard>
+      </div>
+    </div>
   );
 };
 
