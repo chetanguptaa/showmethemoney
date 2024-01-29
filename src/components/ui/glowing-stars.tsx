@@ -22,7 +22,7 @@ export const GlowingStarsBackgroundCard = ({
         setMouseEnter(false);
       }}
       className={cn(
-        " p-4 max-w-md max-h-[20rem] h-full w-full rounded-sm border",
+        " p-4 max-w-md max-h-[20rem] h-full w-full rounded-sm border border-black dark:border-white",
         className
       )}
     >
@@ -64,7 +64,7 @@ export const GlowingStarsTitle = ({
     return (
       <h2
         className={cn(
-          "font-normal text-2xl text-[#eaeaea] underline underline-offset-4 hover:underline-offset-8 transition-all duration-300 ease-in-out hover:cursor-pointer ",
+          "font-normal text-2xl text-black dark:text-white underline underline-offset-4 hover:underline-offset-8 transition-all duration-300 ease-in-out hover:cursor-pointer ",
           className
         )}
         onClick={() => router.push(url)}
@@ -76,7 +76,7 @@ export const GlowingStarsTitle = ({
     return (
       <h2
         className={cn(
-          "font-normal text-2xl text-[#eaeaea] underline underline-offset-4 hover:underline-offset-8 transition-all duration-300 ease-in-out hover:cursor-pointer ",
+          "font-normal text-2xl text-black dark:text-white underline underline-offset-4 hover:underline-offset-8 transition-all duration-300 ease-in-out hover:cursor-pointer ",
           className
         )}
         onClick={checkBalance}
@@ -148,14 +148,16 @@ const Star = ({ isGlowing, delay }: { isGlowing: boolean; delay: number }) => {
       }}
       animate={{
         scale: isGlowing ? [1, 1.2, 2.5, 2.2, 1.5] : 1,
-        background: isGlowing ? "#fff" : "#666",
+        background: isGlowing ? "#fff" : "#000",
       }}
       transition={{
         duration: 2,
         ease: "easeInOut",
         delay: delay,
       }}
-      className={cn("bg-[#666] h-[1px] w-[1px] rounded-full relative z-20")}
+      className={cn(
+        "bg-black dark:bg-white h-[1px] w-[1px] rounded-full relative z-20"
+      )}
     ></motion.div>
   );
 };
@@ -177,7 +179,7 @@ const Glow = ({ delay }: { delay: number }) => {
       exit={{
         opacity: 0,
       }}
-      className="absolute  left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-blue-500 blur-[1px] shadow-2xl shadow-blue-400"
+      className="absolute  left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-rose-500 dark:bg-blue-500 blur-[1px] shadow-2xl shadow-blue-400"
     />
   );
 };

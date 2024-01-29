@@ -15,7 +15,6 @@ const Header = async () => {
         <div className="flex flex-1 items-center justify-end">
           <nav className="flex items-center space-x-6">
             <Notifications />
-            <AvatarProfile />
             <a
               target="_blank"
               rel="noreferrer"
@@ -26,6 +25,7 @@ const Header = async () => {
               </div>
             </a>
             <ModeToggle />
+            <AvatarProfile />
           </nav>
         </div>
       </div>
