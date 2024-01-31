@@ -22,13 +22,11 @@ const components = [
 
 export default async function Home() {
   return (
-    <div className="container grid grid-cols-1 gap-4 sm:max-w-screen-xl max-w-screen-sm">
-      <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-4 gap-2 mt-8">
-        {components.map((component, i) => (
-          <GlowingCard text={component.text} url={component.url} key={i} />
-        ))}
-        <CheckBalance />
-      </div>
+    <div className="container sm:max-w-screen-xl max-w-screen-sm grid grid-cols-1 sm:grid-cols-2 sm:gap-4 gap-2 mt-8">
+      {components.map((component, i) => (
+        <GlowingCard text={component.text} url={component.url} key={i} />
+      ))}
+      <CheckBalance />
     </div>
   );
 }
